@@ -29,9 +29,9 @@ function App() {
     fetchReactions(drugName)
       .then(
         (data) => {
-          return data.map((reaction) => {
+          const arrayOfPromises = data.map((reaction) => {
             let totalReaction;
-            fetchAdverseEvent(reaction.term)
+            return fetchAdverseEvent(reaction.term)
               .then(
                 (result) => {
                   totalReaction = result;
@@ -50,6 +50,8 @@ function App() {
                 return newReaction;
               });
           });
+
+          return Promise.all(arrayOfPromises);
         },
         (error) => {
           setError(error);
@@ -60,36 +62,6 @@ function App() {
         console.log(newReactions);
         setIsLoading(false);
       });
-
-    // fetchDrug(drugName).then((result) => {
-    //   // setNumOfDrugReport(result);
-    //   .then(()=> {
-    //     fetchReactions(drugName)
-    //     .then((data) => {
-    //       setReactions(data);
-    //     })
-    //     .then(() => {
-    //       console.log(reactions);
-    //       let totalReaction;
-    //       const newReactions = reactions.map((reaction) => {
-    //         fetchAdverseEvent(reaction.term)
-    //           .then((result) => {
-    //             totalReaction = result;
-    //           })
-    //           .then(() => {
-    //             console.log(totalReaction);
-    //             return {
-    //               term: reaction.term,
-    //               count: reaction.count,
-    //               total: totalReaction,
-    //             };
-    //           });
-    //       });
-    //       setReactions(newReactions);
-    //       setIsLoading(false);
-    //     });
-    //   });
-    // });
 
     // fetchAdverseEvent(adverseEvent).then((result) => {
     //   setNumOfEventReport(result);
